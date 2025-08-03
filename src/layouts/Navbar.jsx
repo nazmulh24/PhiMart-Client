@@ -3,26 +3,6 @@ import { Link, NavLink } from "react-router";
 
 const Navbar = () => {
   return (
-    // <div>
-    //   <NavLink
-    //     to="/"
-    //     className={({ isActive }) => (isActive ? "text-blue-500" : "")}
-    //   >
-    //     Home
-    //   </NavLink>
-    //   <NavLink
-    //     to="/products"
-    //     className={({ isActive }) => (isActive ? "text-blue-500" : "")}
-    //   >
-    //     Products
-    //   </NavLink>
-    //   <NavLink
-    //     to="/about"
-    //     className={({ isActive }) => (isActive ? "text-blue-500" : "")}
-    //   >
-    //     About
-    //   </NavLink>
-    //   </div>
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
         <div className="dropdown">
