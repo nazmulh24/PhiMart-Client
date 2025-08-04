@@ -12,6 +12,7 @@ const ProductItem = ({ product }) => {
                 : defaultImage
             }
             alt={product.name}
+            className="w-full h-64 object-cover"
           />
         </figure>
         <div className="card-body">
