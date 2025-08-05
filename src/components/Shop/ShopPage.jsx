@@ -1,33 +1,11 @@
-import React, { useEffect, useState } from "react";
-import apiClient from "../../services/api-client";
+import { useState } from "react";
 import ProductList from "./ProductList";
 import Pagination from "./Pagination";
+import useFetchProduct from "../../hooks/useFetchProducts";
 
 const ShopPage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const FetchProducts = async () => {
-      setLoading(true);
-
-      try {
-        const response = await apiClient.get(`/products/?page=${currentPage}`);
-        const data = await response.data;
-
-        // console.log(data.results);
-        setProducts(data.results);
-        setTotalPages(Math.ceil(data.count / data.results.length));
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    FetchProducts();
-  }, [currentPage]);
+  const { products, loading, totalPages } = useFetchProduct(currentPage);
 
   return (
     <div>
