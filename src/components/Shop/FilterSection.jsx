@@ -1,9 +1,9 @@
 const FilterSection = ({
   priceRange,
   handlePriceChange,
-  // categories,
-  // selectedCategory,
-  // handleCategoryChange,
+  categories,
+  selectedCategory,
+  handleCategoryChange,
   // searchQuery,
   // handleSearchQuery,
   // sortOrder,
@@ -70,15 +70,15 @@ const FilterSection = ({
         </label>
         <select
           className="w-full p-2 border rounded-md"
-          // value={selectedCategory}
-          // onChange={(e) => handleCategoryChange(e.target.value)}
+          value={selectedCategory}
+          onChange={(e) => handleCategoryChange(e.target.value)}
         >
           <option value="">All Categories</option>
-          {/* {categories.map((category) => ( */}
-            {/* <option key={category.id} value={category.id}> */}
-              {/* {category.name} */}
-            {/* </option> */}
-          {/* ))} */}
+          {categories.map((ctg) => (
+            <option key={ctg.id} value={ctg.id}>
+              {ctg.name}
+            </option>
+          ))}
         </select>
       </div>
 
