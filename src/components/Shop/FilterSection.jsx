@@ -4,8 +4,8 @@ const FilterSection = ({
   categories,
   selectedCategory,
   handleCategoryChange,
-  // searchQuery,
-  // handleSearchQuery,
+  searchQuery,
+  handleSearchQuery,
   // sortOrder,
   // handleSorting,
 }) => {
@@ -89,8 +89,8 @@ const FilterSection = ({
         </label>
         <input
           type="text"
-          // value={searchQuery}
-          // onChange={(e) => handleSearchQuery(e.target.value)}
+          value={searchQuery}
+          onChange={(e) => handleSearchQuery(e.target.value)}
           placeholder="Search books..."
           className="w-full p-2 border rounded-md"
         />
