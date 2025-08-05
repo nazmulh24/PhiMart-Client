@@ -5,29 +5,29 @@ import Pagination from "./Pagination";
 
 const ShopPage = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    FetchProducts();
-  }, []);
+    const FetchProducts = async () => {
+      setLoading(true);
 
-  const FetchProducts = async () => {
-    apiClient
-      .get("/products")
-      .then((res) => {
-        setProducts(res.data.results);
-        setTotalPages(Math.ceil(res.data.count / res.data.results.length));
-        // console.log(res.data.results);
-      })
-      .catch((error) => {
+      try {
+        const response = await apiClient.get(`/products/?page=${currentPage}`);
+        const data = await response.data;
+
+        // console.log(data.results);
+        setProducts(data.results);
+        setTotalPages(Math.ceil(data.count / data.results.length));
+      } catch (error) {
         console.error("Error fetching products:", error);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
-  };
+      }
+    };
+    FetchProducts();
+  }, [currentPage]);
 
   return (
     <div>
