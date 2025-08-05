@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import CarouselSlide from "./CarouselSlide";
 
-import book from "../../assets/images/book.png";
+import book from "../../../assets/images/book.png";
 
 const HeroCarousel = () => {
   const slides = [
