@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import useAuthContext from "../hooks/useAuthContext";
+import ErrorAlert from "../components/Alert/ErrorAlert";
 // import { useState } from "react";
 
 const Login = () => {
@@ -10,12 +11,12 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const { user, loginUser } = useAuthContext();
+  const { user, errorMsg, loginUser } = useAuthContext();
 
   //   const { errorMsg, loginUser } = useAuthContext();
-  //   const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
     // setLoading(true);
@@ -29,14 +30,19 @@ const Login = () => {
     //   setLoading(false);
     // }
 
-    await loginUser(data);
+    try {
+      await loginUser(data);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login Failed", error);
+    }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 bg-base-200">
       <div className="card w-full max-w-md bg-base-100 shadow-xl">
         <div className="card-body">
-          {/* {errorMsg && <ErroAlert error={errorMsg} />} */}
+          {errorMsg && <ErrorAlert error={errorMsg} />}
           <h2 className="card-title text-2xl font-bold">Sign in</h2>
           <p className="text-base-content/70">
             Enter your email and password to access your account
@@ -86,9 +92,10 @@ const Login = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              //   disabled={loading}
+              // disabled={loading}
             >
               {/* {loading ? "Logging In..." : "Login"} */}
+              Login
             </button>
           </form>
 
