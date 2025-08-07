@@ -58,7 +58,16 @@ const useAuth = () => {
       // console.log(response.data);
       return response.data;
     } catch (error) {
-      setErrorMsg(error.response.data?.detail);
+      if (error.response && error.response.data) {
+        const errMsg = Object.values(error.response.data).flat().join("\n");
+        setErrorMsg(errMsg);
+        return { success: false, message: errMsg };
+      }
+      setErrorMsg("Registration failed. Please try again.");
+      return {
+        success: false,
+        message: "Registration failed. Please try again.",
+      };
     }
   };
 
