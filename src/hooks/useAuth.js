@@ -50,7 +50,19 @@ const useAuth = () => {
     }
   };
 
-  return { user, loginUser, errorMsg };
+  const registerUser = async (userData) => {
+    setErrorMsg("");
+
+    try {
+      const response = await apiClient.post("/auth/users/", userData);
+      // console.log(response.data);
+      return response.data;
+    } catch (error) {
+      setErrorMsg(error.response.data?.detail);
+    }
+  };
+
+  return { user, loginUser, registerUser, errorMsg };
 };
 
 export default useAuth;
