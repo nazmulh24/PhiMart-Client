@@ -50,13 +50,17 @@ const useAuth = () => {
     }
   };
 
+  // Register User
   const registerUser = async (userData) => {
     setErrorMsg("");
 
     try {
-      const response = await apiClient.post("/auth/users/", userData);
-      // console.log(response.data);
-      return response.data;
+      await apiClient.post("/auth/users/", userData);
+      return {
+        success: true,
+        message:
+          "Registration successfull. Check your email to activate your account.",
+      };
     } catch (error) {
       if (error.response && error.response.data) {
         const errMsg = Object.values(error.response.data).flat().join("\n");
@@ -71,7 +75,14 @@ const useAuth = () => {
     }
   };
 
-  return { user, loginUser, registerUser, errorMsg };
+  // Logout User
+  const logoutUser = () => {
+    setAuthTokens(null);
+    setUser(null);
+    localStorage.removeItem("authTokens");
+  };
+
+  return { user, loginUser, registerUser, logoutUser, errorMsg };
 };
 
 export default useAuth;
