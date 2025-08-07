@@ -6,7 +6,7 @@ import ErrorAlert from "../components/Alert/ErrorAlert";
 
 const Register = () => {
   const { registerUser, errorMsg } = useAuthContext();
-//   const [successMsg, setSuccessMsg] = useState("");
+  //   const [successMsg, setSuccessMsg] = useState("");
 
   const {
     register,
@@ -16,15 +16,15 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-      delete data.confirm_password;
-      
+    delete data.confirm_password;
+
     try {
       const response = await registerUser(data);
       console.log(response);
-    //   if (response.success) {
-    //     setSuccessMsg(response.message);
-        // setTimeout(() => navigate("/login"), 3000);
-    //   }
+      //   if (response.success) {
+      //     setSuccessMsg(response.message);
+      // setTimeout(() => navigate("/login"), 3000);
+      //   }
     } catch (error) {
       console.log("Registration failed", error);
     }
@@ -193,7 +193,9 @@ const Register = () => {
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary w-full"></button>
+            <button type="submit" className="btn btn-primary w-full">
+              Register
+            </button>
           </form>
 
           <div className="text-center mt-4">
