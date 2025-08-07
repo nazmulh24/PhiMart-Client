@@ -21,7 +21,7 @@ const ActivateAccount = () => {
         setError("Something Went Wrong. Please check your activation link");
         console.log(error);
       });
-  }, []);
+  }, [uid, token, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-base-200">

@@ -14,24 +14,24 @@ const useAuth = () => {
 
   useEffect(() => {
     if (authTokens) {
+      // Fetch user profile
+      const fetchUserProfile = async () => {
+        try {
+          const response = await apiClient.get("/auth/users/me", {
+            headers: {
+              Authorization: `JWT ${authTokens?.access}`,
+            },
+          });
+          //   console.log(response.data);
+          setUser(response.data);
+        } catch (error) {
+          console.error("Failed to fetch user profile:", error);
+        }
+      };
+
       fetchUserProfile();
     }
   }, [authTokens]);
-
-  // Fetch user profile
-  const fetchUserProfile = async () => {
-    try {
-      const response = await apiClient.get("/auth/users/me", {
-        headers: {
-          Authorization: `JWT ${authTokens?.access}`,
-        },
-      });
-      //   console.log(response.data);
-      setUser(response.data);
-    } catch (error) {
-      console.error("Failed to fetch user profile:", error);
-    }
-  };
 
   // Login User
   const loginUser = async (userData) => {
