@@ -12,9 +12,9 @@ const useAuth = () => {
 
   const [authTokens, setAuthTokens] = useState(getToken());
 
+  //--> Fetch user profile
   useEffect(() => {
     if (authTokens) {
-      // Fetch user profile
       const fetchUserProfile = async () => {
         try {
           const response = await apiClient.get("/auth/users/me", {
@@ -33,7 +33,7 @@ const useAuth = () => {
     }
   }, [authTokens]);
 
-  // Login User
+  //--> Login User
   const loginUser = async (userData) => {
     setErrorMsg("");
 
@@ -50,7 +50,7 @@ const useAuth = () => {
     }
   };
 
-  // Register User
+  //--> Register User
   const registerUser = async (userData) => {
     setErrorMsg("");
 
@@ -75,7 +75,7 @@ const useAuth = () => {
     }
   };
 
-  // Logout User
+  //--> Logout User
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
