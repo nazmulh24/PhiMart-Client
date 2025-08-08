@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -9,10 +8,12 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import PrivateRoute from "../components/PrivateRoute";
 import ActivateAccount from "../components/Registration/ActivateAccount";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />
@@ -23,14 +24,17 @@ const AppRoutes = () => {
         <Route path="activate/:uid/:token" element={<ActivateAccount />} />
       </Route>
 
+      {/* Protected Routes */}
       <Route
         path="dashboard"
         element={
           <PrivateRoute>
-            <Dashboard />
+            <DashboardLayout />
           </PrivateRoute>
         }
-      />
+      >
+        <Route index element={<Dashboard />} />
+      </Route>
     </Routes>
   );
 };
