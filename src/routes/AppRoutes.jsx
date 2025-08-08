@@ -9,6 +9,7 @@ import Dashboard from "../pages/Dashboard";
 import PrivateRoute from "../components/PrivateRoute";
 import ActivateAccount from "../components/Registration/ActivateAccount";
 import DashboardLayout from "../layouts/DashboardLayout";
+import Profile from "../pages/Profile";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,8 @@ const AppRoutes = () => {
         }
       >
         <Route index element={<Dashboard />} />
+        <Route path="profile" element={<Profile />} />
+        {/* Add other dashboard routes here */}
       </Route>
     </Routes>
   );
