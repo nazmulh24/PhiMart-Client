@@ -1,8 +1,4 @@
-const ProfileButtons = ({
-  isEditing,
-  setIsEditing,
-  // isSubmitting,
-}) => {
+const ProfileButtons = ({ isEditing, setIsEditing, isSubmitting }) => {
   return (
     <div className="flex justify-center pt-4">
       {isEditing ? (
@@ -10,10 +6,9 @@ const ProfileButtons = ({
           <button
             type="submit"
             className="btn btn-primary px-8"
-            // disabled={isSubmitting}
+            disabled={isSubmitting}
           >
-            {/* {isSubmitting ? "Saving" : "Save Changes"} */}
-            Save Changes
+            {isSubmitting ? "Saving" : "Save Changes"}
           </button>
           <button
             type="button"

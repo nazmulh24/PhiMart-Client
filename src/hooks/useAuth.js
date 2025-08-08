@@ -4,6 +4,7 @@ import apiClient from "../services/api-client";
 const useAuth = () => {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const getToken = () => {
     const token = localStorage.getItem("authTokens");
@@ -38,9 +39,37 @@ const useAuth = () => {
     defaultMessage = "Something Went Wrong! Try Again"
   ) => {
     console.log(error);
-    setErrorMsg(
-      error?.response?.data?.detail || error?.message || defaultMessage
-    );
+
+    // setErrorMsg(
+    //   error?.response?.data?.detail || error?.message || defaultMessage
+    // );
+
+    if (error.response && error.response.data) {
+      const errorMessage = Object.values(error.response.data).flat().join("\n");
+      setErrorMsg(errorMessage);
+      return { success: false, message: errorMessage };
+    }
+    setErrorMsg(defaultMessage);
+    setTimeout(() => setErrorMsg(""), 10000);
+    return {
+      success: false,
+      message: defaultMessage,
+    };
+  };
+
+  let successTimeoutId;
+
+  const handleAPISuccess = (
+    success,
+    clearError = true,
+    defaultMessage = "Operation successful"
+  ) => {
+    if (clearError) setErrorMsg("");
+    const successMessage = success || defaultMessage;
+    setSuccessMsg(successMessage);
+    if (successTimeoutId) clearTimeout(successTimeoutId);
+    successTimeoutId = setTimeout(() => setSuccessMsg(""), 10000);
+    return { success: true, message: successMessage };
   };
 
   //---> Update User Profile
@@ -53,6 +82,22 @@ const useAuth = () => {
           Authorization: `JWT ${authTokens?.access}`,
         },
       });
+      return handleAPISuccess("Profile updated successfully");
+    } catch (error) {
+      return handleAPIError(error);
+    }
+  };
+
+  //---> Password Change
+  const changePassword = async (data) => {
+    setErrorMsg("");
+    try {
+      await apiClient.post("/auth/users/set_password/", data, {
+        headers: {
+          Authorization: `JWT ${authTokens?.access}`,
+        },
+      });
+      return handleAPISuccess("Password changed successfully");
     } catch (error) {
       return handleAPIError(error);
     }
@@ -87,16 +132,7 @@ const useAuth = () => {
           "Registration successfull. Check your email to activate your account.",
       };
     } catch (error) {
-      if (error.response && error.response.data) {
-        const errMsg = Object.values(error.response.data).flat().join("\n");
-        setErrorMsg(errMsg);
-        return { success: false, message: errMsg };
-      }
-      setErrorMsg("Registration failed. Please try again.");
-      return {
-        success: false,
-        message: "Registration failed. Please try again.",
-      };
+      return handleAPIError(error, "Registration Failed! Try Again");
     }
   };
 
@@ -113,7 +149,9 @@ const useAuth = () => {
     registerUser,
     logoutUser,
     updateUserProfile,
+    changePassword,
     errorMsg,
+    successMsg,
   };
 };
 
