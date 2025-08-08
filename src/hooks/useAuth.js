@@ -33,6 +33,31 @@ const useAuth = () => {
     }
   }, [authTokens]);
 
+  const handleAPIError = (
+    error,
+    defaultMessage = "Something Went Wrong! Try Again"
+  ) => {
+    console.log(error);
+    setErrorMsg(
+      error?.response?.data?.detail || error?.message || defaultMessage
+    );
+  };
+
+  //---> Update User Profile
+  const updateUserProfile = async (data) => {
+    setErrorMsg("");
+
+    try {
+      await apiClient.put("/auth/users/me/", data, {
+        headers: {
+          Authorization: `JWT ${authTokens?.access}`,
+        },
+      });
+    } catch (error) {
+      return handleAPIError(error);
+    }
+  };
+
   //--> Login User
   const loginUser = async (userData) => {
     setErrorMsg("");
@@ -82,7 +107,14 @@ const useAuth = () => {
     localStorage.removeItem("authTokens");
   };
 
-  return { user, loginUser, registerUser, logoutUser, errorMsg };
+  return {
+    user,
+    loginUser,
+    registerUser,
+    logoutUser,
+    updateUserProfile,
+    errorMsg,
+  };
 };
 
 export default useAuth;
