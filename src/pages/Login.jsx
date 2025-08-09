@@ -12,15 +12,30 @@ const Login = () => {
   } = useForm();
 
   const navigate = useNavigate();
+  const { errorMsg, loginUser, resendActivation } = useAuthContext();
 
-  const { errorMsg, loginUser } = useAuthContext();
+  // State management
   const [loading, setLoading] = useState(false);
+  const [needsActivation, setNeedsActivation] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
 
+  // Form submission handler
   const onSubmit = async (data) => {
     setLoading(true);
+    setNeedsActivation(false);
+
     try {
-      await loginUser(data);
-      navigate("/dashboard");
+      const result = await loginUser(data);
+
+      if (result.success) {
+        navigate("/dashboard");
+      } else if (result.needsActivation) {
+        setNeedsActivation(true);
+        setUserEmail(result.email);
+      } else if (result.needsRegistration) {
+        navigate("/register");
+      }
     } catch (error) {
       console.error("Login Failed", error);
     } finally {
@@ -28,17 +43,36 @@ const Login = () => {
     }
   };
 
+  // Resend activation handler
+  const handleResendActivation = async () => {
+    setResendLoading(true);
+
+    try {
+      await resendActivation(userEmail);
+      setNeedsActivation(false);
+    } catch (error) {
+      console.error("Resend activation failed", error);
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 bg-base-200">
       <div className="card w-full max-w-md bg-base-100 shadow-xl">
         <div className="card-body">
+          {/* Error Alert */}
           {errorMsg && <ErrorAlert error={errorMsg} />}
+
+          {/* Header */}
           <h2 className="card-title text-2xl font-bold">Sign in</h2>
           <p className="text-base-content/70">
             Enter your email and password to access your account
           </p>
 
+          {/* Login Form */}
           <form className="space-y-4 mt-4" onSubmit={handleSubmit(onSubmit)}>
+            {/* Email Field */}
             <div className="form-control">
               <label className="label" htmlFor="email">
                 <span className="label-text">Email</span>
@@ -59,6 +93,7 @@ const Login = () => {
               )}
             </div>
 
+            {/* Password Field */}
             <div className="form-control">
               <label className="label" htmlFor="password">
                 <span className="label-text">Password</span>
@@ -68,7 +103,7 @@ const Login = () => {
                 type="password"
                 placeholder="••••••••"
                 className={`input input-bordered w-full ${
-                  errors.email ? "input-error" : ""
+                  errors.password ? "input-error" : ""
                 }`}
                 {...register("password", { required: "Password is required" })}
               />
@@ -79,12 +114,14 @@ const Login = () => {
               )}
             </div>
 
+            {/* Forgot Password Link */}
             <div className="text-base-content/70 text-center">
               <Link to="/forgot-password" className="link link-primary">
                 Forgot your password?
               </Link>
             </div>
 
+            {/* Login Button */}
             <button
               type="submit"
               className="btn btn-primary w-full"
@@ -94,6 +131,28 @@ const Login = () => {
             </button>
           </form>
 
+          {/* Activation Warning Box */}
+          {needsActivation && (
+            <div className="mt-4 p-4 bg-warning/10 border border-warning/20 rounded-lg">
+              <p className="text-sm text-center mb-3">
+                <strong>Login failed.</strong> This could be due to:
+              </p>
+              <ul className="text-xs text-left mb-3 space-y-1">
+                <li>• Incorrect email or password</li>
+                <li>• Account not activated yet</li>
+                <li>• Email not registered</li>
+              </ul>
+              <button
+                onClick={handleResendActivation}
+                className="btn btn-warning w-full"
+                disabled={resendLoading}
+              >
+                {resendLoading ? "Sending..." : "Resend Activation Email"}
+              </button>
+            </div>
+          )}
+
+          {/* Register Link */}
           <div className="text-center mt-4">
             <p className="text-base-content/70">
               Don&apos;t have an account?{" "}

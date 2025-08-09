@@ -103,7 +103,7 @@ const useAuth = () => {
     }
   };
 
-  //--> Login User
+  //--> Login User with smart error handling
   const loginUser = async (userData) => {
     setErrorMsg("");
 
@@ -113,10 +113,43 @@ const useAuth = () => {
       // console.log(response.data);
       setAuthTokens(response.data);
       localStorage.setItem("authTokens", JSON.stringify(response.data));
-      // setUser(response.data.user);
-      // return response.data;
+
+      return { success: true, data: response.data };
     } catch (error) {
-      setErrorMsg(error.response.data?.detail);
+      console.log("Login error details:", error.response?.data);
+
+      const errorMessage =
+        error.response?.data?.detail ||
+        error.response?.data?.non_field_errors?.[0];
+
+      //--> Handle all login failures with the same helpful response
+      // Django returns "No active account found with the given credentials" for:
+      // - Non-existent email, inactive account, OR wrong password (for security)
+      if (
+        errorMessage === "No active account found with the given credentials"
+      ) {
+        setErrorMsg(
+          "Login failed. Please check your credentials, ensure your account is activated, or register if you don't have an account."
+        );
+        return {
+          success: false,
+          needsActivation: true, //--> Show helpful options
+          needsRegistration: false,
+          email: userData.email,
+          message: "Login failed",
+        };
+      }
+
+      //---> Handle other unexpected errors
+      setErrorMsg(
+        errorMessage || "An unexpected error occurred. Please try again."
+      );
+      return {
+        success: false,
+        needsActivation: false,
+        needsRegistration: false,
+        message: errorMessage || "Unexpected error",
+      };
     }
   };
 
