@@ -79,6 +79,12 @@ const Login = () => {
               )}
             </div>
 
+            <div className="text-base-content/70 text-center">
+              <Link to="/forgot-password" className="link link-primary">
+                Forgot your password?
+              </Link>
+            </div>
+
             <button
               type="submit"
               className="btn btn-primary w-full"
