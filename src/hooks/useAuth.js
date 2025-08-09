@@ -120,6 +120,20 @@ const useAuth = () => {
     }
   };
 
+  //--> Forgot Password
+  const forgotPassword = async (email) => {
+    setErrorMsg("");
+
+    try {
+      await apiClient.post("/auth/users/reset_password/", { email: email });
+      return handleAPISuccess(
+        "Password reset link has been sent to your email address. Please check your inbox."
+      );
+    } catch (error) {
+      return handleAPIError(error, "Failed to send reset email");
+    }
+  };
+
   //--> Register User
   const registerUser = async (userData) => {
     setErrorMsg("");
@@ -146,6 +160,7 @@ const useAuth = () => {
   return {
     user,
     loginUser,
+    forgotPassword,
     registerUser,
     logoutUser,
     updateUserProfile,

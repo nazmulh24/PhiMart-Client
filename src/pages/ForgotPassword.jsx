@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { useState } from "react";
-import apiClient from "../services/api-client";
+import useAuthContext from "../hooks/useAuthContext";
 import ErrorAlert from "../components/Alert/ErrorAlert";
 import SuccessAlert from "../components/Alert/SuccessAlert";
 
@@ -12,34 +12,17 @@ const ForgotPassword = () => {
     formState: { errors },
   } = useForm();
 
+  const { forgotPassword, errorMsg, successMsg } = useAuthContext();
   const [loading, setLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
 
   const onSubmit = async (data) => {
     setLoading(true);
-    setErrorMsg("");
-    setSuccessMsg("");
 
     try {
-      const response = await apiClient.post("/auth/user/reset_password/", {
-        email: data.email,
-      });
-      console.log("Password reset request sent for:", data.email);
-      console.log("API Response:", response);
-      setSuccessMsg(
-        "Password reset link has been sent to your email address. Please check your inbox."
-      );
+      //   console.log(data.email);
+      await forgotPassword(data.email);
     } catch (error) {
-      console.error("API Error:", error);
-      console.error("Error Response:", error.response);
-      const errorMessage =
-        error.response?.data?.detail ||
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        error.message ||
-        "Failed to send reset email";
-      setErrorMsg(errorMessage);
+      console.error("Forgot password failed:", error);
     } finally {
       setLoading(false);
     }
