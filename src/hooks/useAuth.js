@@ -134,6 +134,22 @@ const useAuth = () => {
     }
   };
 
+  //--> Reset Password
+  const resetPassword = async (uid, token, newPassword) => {
+    setErrorMsg("");
+
+    try {
+      await apiClient.post("/auth/users/reset_password_confirm/", {
+        uid,
+        token,
+        new_password: newPassword,
+      });
+      return handleAPISuccess("Password reset successful!");
+    } catch (error) {
+      return handleAPIError(error, "Failed to reset password");
+    }
+  };
+
   //--> Register User
   const registerUser = async (userData) => {
     setErrorMsg("");
@@ -161,6 +177,7 @@ const useAuth = () => {
     user,
     loginUser,
     forgotPassword,
+    resetPassword,
     registerUser,
     logoutUser,
     updateUserProfile,

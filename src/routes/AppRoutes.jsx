@@ -11,6 +11,7 @@ import ActivateAccount from "../components/Registration/ActivateAccount";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Profile from "../pages/Profile";
 import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +24,10 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route
+          path="password/reset/confirm/:uid/:token"
+          element={<ResetPassword />}
+        />
 
         <Route path="activate/:uid/:token" element={<ActivateAccount />} />
       </Route>
