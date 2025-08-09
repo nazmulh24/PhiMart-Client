@@ -1,15 +1,17 @@
 import { useForm } from "react-hook-form";
-import { Link, } from "react-router";
+import { Link } from "react-router";
 import useAuthContext from "../hooks/useAuthContext";
 import ErrorAlert from "../components/Alert/ErrorAlert";
 import SuccessAlert from "../components/Alert/SuccessAlert";
 import { useState } from "react";
 
 const Register = () => {
-  const { registerUser, errorMsg } = useAuthContext();
+  const { registerUser, resendActivation, errorMsg } = useAuthContext();
   const [successMsg, setSuccessMsg] = useState("");
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
 
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   const {
     register,
@@ -19,6 +21,7 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    const emailData = data.email;
     delete data.confirm_password;
 
     try {
@@ -26,10 +29,26 @@ const Register = () => {
       console.log(response);
       if (response.success) {
         setSuccessMsg(response.message);
-        // setTimeout(() => navigate("/login"), 3000);
+        setRegisteredEmail(emailData);
       }
     } catch (error) {
       console.log("Registration failed", error);
+    }
+  };
+
+  const handleResendActivation = async () => {
+    setResendLoading(true);
+    try {
+      const response = await resendActivation(registeredEmail);
+      if (response.success) {
+        setSuccessMsg(
+          "Activation link has been resent to your email address. Please check your inbox."
+        );
+      }
+    } catch (error) {
+      console.log("Resend activation failed", error);
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -191,6 +210,20 @@ const Register = () => {
                 Sign in
               </Link>
             </p>
+            {successMsg && registeredEmail && (
+              <div className="mt-4">
+                <p className="text-base-content/70 mb-2">
+                  Didn't receive the activation email?
+                </p>
+                <button
+                  onClick={handleResendActivation}
+                  className="btn btn-outline btn-sm"
+                  disabled={resendLoading}
+                >
+                  {resendLoading ? "Resending..." : "Resend Activation Link"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

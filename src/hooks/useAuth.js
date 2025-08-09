@@ -166,6 +166,20 @@ const useAuth = () => {
     }
   };
 
+  //--> Resend Activation Email
+  const resendActivation = async (email) => {
+    setErrorMsg("");
+
+    try {
+      await apiClient.post("/auth/users/resend_activation/", { email });
+      return handleAPISuccess(
+        "Activation link has been resent to your email address. Please check your inbox."
+      );
+    } catch (error) {
+      return handleAPIError(error, "Failed to resend activation email");
+    }
+  };
+
   //--> Logout User
   const logoutUser = () => {
     setAuthTokens(null);
@@ -179,6 +193,7 @@ const useAuth = () => {
     forgotPassword,
     resetPassword,
     registerUser,
+    resendActivation,
     logoutUser,
     updateUserProfile,
     changePassword,
