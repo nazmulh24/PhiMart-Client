@@ -12,6 +12,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import Profile from "../pages/Profile";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import ProductDetail from "../pages/ProductDetail";
 
 const AppRoutes = () => {
   return (
@@ -24,6 +25,8 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="shop/:id" element={<ProductDetail />} />
+
         <Route
           path="password/reset/confirm/:uid/:token"
           element={<ResetPassword />}
