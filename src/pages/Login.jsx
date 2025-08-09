@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import useAuthContext from "../hooks/useAuthContext";
 import ErrorAlert from "../components/Alert/ErrorAlert";
 import { useState } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
   const {
@@ -19,6 +20,7 @@ const Login = () => {
   const [needsActivation, setNeedsActivation] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [resendLoading, setResendLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Form submission handler
   const onSubmit = async (data) => {
@@ -98,15 +100,31 @@ const Login = () => {
               <label className="label" htmlFor="password">
                 <span className="label-text">Password</span>
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className={`input input-bordered w-full ${
-                  errors.password ? "input-error" : ""
-                }`}
-                {...register("password", { required: "Password is required" })}
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className={`input input-bordered w-full pr-12 ${
+                    errors.password ? "input-error" : ""
+                  }`}
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 px-3 flex items-center hover:bg-transparent focus:outline-none z-10"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <AiOutlineEyeInvisible className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <AiOutlineEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <span className="label-text-alt text-error">
                   {errors.password.message}

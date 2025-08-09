@@ -10,6 +10,7 @@ const Register = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resendLoading, setResendLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   //   const navigate = useNavigate();
 
@@ -158,7 +159,7 @@ const Register = () => {
               </label>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 className="input input-bordered w-full"
                 {...register("password", {
@@ -182,7 +183,7 @@ const Register = () => {
               </label>
               <input
                 id="confirmPassword"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 className="input input-bordered w-full"
                 {...register("confirm_password", {
@@ -196,6 +197,19 @@ const Register = () => {
                   {errors.confirm_password.message}
                 </span>
               )}
+            </div>
+
+            {/* Show Password Checkbox  */}
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Show Password</span>
+                <input
+                  type="checkbox"
+                  className="toggle"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                />
+              </label>
             </div>
 
             <button type="submit" className="btn btn-primary w-full">

@@ -18,6 +18,7 @@ const ResetPassword = () => {
 
   const { resetPassword, errorMsg, successMsg } = useAuthContext();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -55,7 +56,7 @@ const ResetPassword = () => {
               </label>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 className="input input-bordered w-full"
                 {...register("password", {
@@ -79,7 +80,7 @@ const ResetPassword = () => {
               </label>
               <input
                 id="confirmPassword"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 className="input input-bordered w-full"
                 {...register("confirm_password", {
@@ -93,6 +94,19 @@ const ResetPassword = () => {
                   {errors.confirm_password.message}
                 </span>
               )}
+            </div>
+
+            {/* Show Password Checkbox  */}
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Show Password</span>
+                <input
+                  type="checkbox"
+                  className="toggle"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                />
+              </label>
             </div>
 
             <button
