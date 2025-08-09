@@ -214,10 +214,13 @@ const useAuth = () => {
   };
 
   //--> Logout User
-  const logoutUser = () => {
+  const logoutUser = (onLogout) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    if (onLogout && typeof onLogout === "function") {
+      onLogout();
+    }
   };
 
   return {
