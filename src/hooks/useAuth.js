@@ -218,6 +218,7 @@ const useAuth = () => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    localStorage.removeItem("cartId");
     if (onLogout && typeof onLogout === "function") {
       onLogout();
     }
