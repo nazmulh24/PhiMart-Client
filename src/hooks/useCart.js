@@ -7,8 +7,11 @@ const useCart = () => {
     return tokens ? JSON.parse(tokens).access : null;
   });
 
+  const [cart, setCart] = useState(null);
+  const [cartId, setCartId] = useState(() => localStorage.getItem("cartId"));
+
   //--> Create a new cart
-  const createCart = async () => {
+  const createOrGetCart = async () => {
     if (!authToken) {
       console.error("No authentication token available");
       return;
@@ -23,13 +26,36 @@ const useCart = () => {
           headers: { Authorization: `JWT ${authToken}` },
         }
       );
-      console.log(response.data);
+      if (!cartId) {
+        localStorage.setItem("cartId", response.data.id);
+        setCartId(response.data.id);
+      }
+      setCart(response.data);
+      //   console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  return { createCart };
+  //--> Add Item to the Cart
+  const addItemToCart = async (product_id, quantity) => {
+    if (!cartId) await createOrGetCart();
+
+    try {
+      const response = await apiClient.post(
+        `/carts/${cartId}/items/`,
+        { product_id, quantity },
+        {
+          headers: { Authorization: `JWT ${authToken}` },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { cart, createOrGetCart, addItemToCart };
 };
 
 export default useCart;
