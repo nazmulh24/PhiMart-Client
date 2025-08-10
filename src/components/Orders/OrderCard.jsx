@@ -26,6 +26,22 @@ const OrderCard = ({ order, onCancel }) => {
     }
   };
 
+  const handlePayment = async (orderId) => {
+    try {
+      const response = await AuthApiClient.post(`payment/initiate/`, {
+        amount: order.total_price,
+        orderId: order.id,
+        numItems: order.items.length,
+      });
+      console.log("Payment response:", response);
+      if (response.status === 200) {
+        // Handle successful payment
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg mb-8 overflow-hidden">
       <div className="bg-gray-100 p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -89,7 +105,10 @@ const OrderCard = ({ order, onCancel }) => {
           </div>
         </div>
         {!user.is_staff && order.status === "Not Paid" && (
-          <button className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+          <button
+            className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+            onClick={() => handlePayment(order.id)}
+          >
             Pay Now
           </button>
         )}
