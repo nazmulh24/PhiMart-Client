@@ -19,6 +19,24 @@ const Orders = () => {
       });
   }, []);
 
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const response = await AuthApiClient.patch(`/orders/${orderId}/`, {
+        status: "Canceled",
+      });
+      console.log("Cancel order response:", response);
+      if (response.status === 200) {
+        setOrders((prevOrder) =>
+          prevOrder.map((order) =>
+            order.id === orderId ? { ...order, status: "Canceled" } : order
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-2 pr-4 md:py-8 md:px-4">
@@ -39,7 +57,13 @@ const Orders = () => {
           <p className="text-gray-500">No orders found.</p>
         </div>
       ) : (
-        orders.map((order) => <OrderCard key={order.id} order={order} />)
+        orders.map((order) => (
+          <OrderCard
+            key={order.id}
+            order={order}
+            onCancel={handleCancelOrder}
+          />
+        ))
       )}
     </div>
   );

@@ -4,7 +4,7 @@ import authApiClient from "../services/auth-api-client";
 const useCart = () => {
   const [authToken] = useState(() => {
     const tokens = localStorage.getItem("authTokens");
-    return tokens ? JSON.parse(tokens).access : null;
+    return tokens ? JSON.parse(tokens)?.access : null;
   });
   const [cart, setCart] = useState({ items: [], total_price: 0 });
   const [cartId, setCartId] = useState(() => localStorage.getItem("cartId"));
