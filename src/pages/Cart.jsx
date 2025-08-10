@@ -6,7 +6,7 @@ const Cart = () => {
 
   useEffect(() => {
     createOrGetCart();
-  }, []);
+  }, [createOrGetCart]);
 
   return <div>{JSON.stringify(cart)}</div>;
 };

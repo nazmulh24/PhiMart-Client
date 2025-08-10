@@ -1,5 +1,4 @@
-import { useState } from "react";
-import apiClient from "../services/api-client";
+import { useCallback, useState } from "react";
 import AuthApiClient from "../services/auth-api-client";
 
 const useCart = () => {
@@ -12,7 +11,7 @@ const useCart = () => {
   const [cartId, setCartId] = useState(() => localStorage.getItem("cartId"));
 
   //--> Create a new cart
-  const createOrGetCart = async () => {
+  const createOrGetCart = useCallback(async () => {
     if (!authToken) {
       console.error("No authentication token available");
       return;
@@ -30,22 +29,25 @@ const useCart = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [authToken, cartId]);
 
   //--> Add Item to the Cart
-  const addItemToCart = async (product_id, quantity) => {
-    if (!cartId) await createOrGetCart();
+  const addItemToCart = useCallback(
+    async (product_id, quantity) => {
+      if (!cartId) await createOrGetCart();
 
-    try {
-      const response = await apiClient.post(`/carts/${cartId}/items/`, {
-        product_id,
-        quantity,
-      });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      try {
+        const response = await AuthApiClient.post(`/carts/${cartId}/items/`, {
+          product_id,
+          quantity,
+        });
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [cartId, createOrGetCart]
+  );
 
   return { cart, createOrGetCart, addItemToCart };
 };
