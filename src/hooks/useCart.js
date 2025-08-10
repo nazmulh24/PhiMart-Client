@@ -1,53 +1,62 @@
-import { useCallback, useState } from "react";
-import AuthApiClient from "../services/auth-api-client";
+import { useCallback, useEffect, useState } from "react";
+import authApiClient from "../services/auth-api-client";
 
 const useCart = () => {
-  const [authToken, setAuthToken] = useState(() => {
+  const [authToken] = useState(() => {
     const tokens = localStorage.getItem("authTokens");
     return tokens ? JSON.parse(tokens).access : null;
   });
-
-  const [cart, setCart] = useState(null);
+  const [cart, setCart] = useState({ items: [], total_price: 0 });
   const [cartId, setCartId] = useState(() => localStorage.getItem("cartId"));
   const [loading, setLoading] = useState(false);
 
-  //--> Create a new cart
-  const createOrGetCart = useCallback(async () => {
-    setLoading(true);
+  // Create or get existing cart
+  const createOrGetCart = useCallback(
+    async (setLoadingState = true) => {
+      if (setLoadingState) setLoading(true);
+      try {
+        console.log("Auth token:", authToken);
 
-    if (!authToken) {
-      console.error("No authentication token available");
-      return;
-    }
+        // Try to get existing cart first if we have cartId
+        if (cartId) {
+          try {
+            const response = await authApiClient.get(`/carts/${cartId}/`);
+            setCart(response.data);
+            console.log("Existing cart loaded:", response.data);
+            return response.data;
+          } catch (error) {
+            console.log("Cart not found, creating new one", error);
+          }
+        }
 
-    try {
-      console.log(authToken);
-      const response = await AuthApiClient.post("/carts/");
-      if (!cartId) {
+        // Create new cart if no existing cart found
+        const response = await authApiClient.post("/carts/");
         localStorage.setItem("cartId", response.data.id);
         setCartId(response.data.id);
+        setCart(response.data);
+        console.log("New cart created:", response.data);
+        return response.data;
+      } catch (error) {
+        console.log("Error creating/getting cart:", error);
+      } finally {
+        if (setLoadingState) setLoading(false);
       }
-      setCart(response.data);
-      //   console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [authToken, cartId]);
+    },
+    [authToken, cartId]
+  );
 
-  //--> Add Item to the Cart
-  const addItemToCart = useCallback(
+  // Add items to the cart
+  const AddCartItems = useCallback(
     async (product_id, quantity) => {
       setLoading(true);
-
       if (!cartId) await createOrGetCart();
-
       try {
-        const response = await AuthApiClient.post(`/carts/${cartId}/items/`, {
+        const response = await authApiClient.post(`/carts/${cartId}/items/`, {
           product_id,
           quantity,
         });
+        // Refresh cart data to sync navbar
+        await createOrGetCart(false);
         return response.data;
       } catch (error) {
         console.log("Error adding Items", error);
@@ -58,43 +67,50 @@ const useCart = () => {
     [cartId, createOrGetCart]
   );
 
-  //--> Update Item Quantity
+  // Update Item quantity
   const updateCartItemQuantity = useCallback(
-    async (itemId, newQuantity) => {
-      if (!cartId) await createOrGetCart();
-
+    async (itemId, quantity) => {
       try {
-        const response = await AuthApiClient.patch(
-          `/carts/${cartId}/items/${itemId}/`,
-          {
-            quantity: newQuantity,
-          }
-        );
-        return response.data;
+        await authApiClient.patch(`/carts/${cartId}/items/${itemId}/`, {
+          quantity,
+        });
+        // Refresh cart data to sync navbar
+        await createOrGetCart(false);
       } catch (error) {
-        console.log("Error updating item quantity", error);
+        console.log("Error updating cart items", error);
       }
     },
     [cartId, createOrGetCart]
   );
 
-  //--> Delete Item from the Cart
+  // Delete Cart Items
   const deleteCartItems = useCallback(
     async (itemId) => {
       try {
-        await AuthApiClient.delete(`/carts/${cartId}/items/${itemId}/`);
+        await authApiClient.delete(`/carts/${cartId}/items/${itemId}/`);
+        // Refresh cart data to sync navbar
+        await createOrGetCart(false);
       } catch (error) {
-        console.log("Error removing item from cart", error);
+        console.log(error);
       }
     },
-    [cartId]
+    [cartId, createOrGetCart]
   );
+
+  useEffect(() => {
+    const initializeCart = async () => {
+      setLoading(true);
+      await createOrGetCart();
+      setLoading(false);
+    };
+    initializeCart();
+  }, [createOrGetCart]);
 
   return {
     cart,
     loading,
     createOrGetCart,
-    addItemToCart,
+    AddCartItems,
     updateCartItemQuantity,
     deleteCartItems,
   };

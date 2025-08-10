@@ -7,7 +7,7 @@ const AddToCartButton = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
-  const { addItemToCart } = useCartContext();
+  const { AddCartItems } = useCartContext();
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -24,24 +24,13 @@ const AddToCartButton = ({ product }) => {
   const addToCart = async () => {
     setIsAdding(true);
     try {
-      await addItemToCart(product.id, quantity);
+      await AddCartItems(product.id, quantity);
       setIsAdded(true);
       setIsAdding(false);
     } catch (error) {
-      console.error("Error adding item to cart:", error);
+      console.log(error);
       setIsAdding(false);
     }
-
-    //---> Simulate API Call
-    // setIsAdding(true);
-    // setTimeout(() => {
-    //   setIsAdding(false);
-    //   setIsAdded(true);
-
-    //   setTimeout(() => {
-    //     setIsAdded(false);
-    //   }, 2000);
-    // }, 1000);
   };
 
   return (

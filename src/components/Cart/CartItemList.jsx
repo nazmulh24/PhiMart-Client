@@ -26,7 +26,9 @@ const CartItemList = ({ items, handleUpdateQuantity, handleRemoveItem }) => {
             {items.map((item) => (
               <tr key={item.id}>
                 <td className="font-medium">{item.product.name} </td>
-                <td className="text-right">${item.product.price}</td>
+                <td className="text-right">
+                  ${parseFloat(item.product.price).toFixed(2)}
+                </td>
                 <td>
                   <div className="flex items-center join">
                     <button
@@ -59,11 +61,13 @@ const CartItemList = ({ items, handleUpdateQuantity, handleRemoveItem }) => {
                     </button>
                   </div>
                 </td>
-                <td className="text-right font-medium">{item.total_price}</td>
+                <td className="text-right font-medium">
+                  ${parseFloat(item.total_price).toFixed(2)}
+                </td>
                 <td>
                   <button
                     className="btn btn-ghost btn-xs btn-circle"
-                    aria-label={`Remove Mystery Novel from cart`}
+                    aria-label={`Remove ${item.name} from cart`}
                     onClick={() => handleRemoveItem(item.id)}
                   >
                     <FaRegTrashAlt className="h-4 w-4" />
