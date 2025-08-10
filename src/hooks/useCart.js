@@ -61,8 +61,6 @@ const useCart = () => {
   //--> Update Item Quantity
   const updateCartItemQuantity = useCallback(
     async (itemId, newQuantity) => {
-      setLoading(true);
-
       if (!cartId) await createOrGetCart();
 
       try {
@@ -75,8 +73,6 @@ const useCart = () => {
         return response.data;
       } catch (error) {
         console.log("Error updating item quantity", error);
-      } finally {
-        setLoading(false);
       }
     },
     [cartId, createOrGetCart]
