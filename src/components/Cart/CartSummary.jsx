@@ -1,11 +1,9 @@
 import AuthApiClient from "../../services/auth-api-client";
 
 const CartSummary = ({ totalPrice, itemCount, cartId }) => {
-  const safePrice = parseFloat(totalPrice) || 0;
-  const safeItemCount = itemCount || 0;
-  const shipping = safeItemCount == 0 || safePrice > 100 ? 0 : 10;
-  const tax = safePrice * 0.1;
-  const orderTotal = safePrice + shipping + tax;
+  const shipping = itemCount == 0 || parseFloat(totalPrice) > 100 ? 0 : 10;
+  const tax = parseFloat(totalPrice) * 0.1;
+  const orderTotal = parseFloat(totalPrice) + shipping + tax;
 
   const deleteCart = () => {
     localStorage.removeItem("cartId");
@@ -30,9 +28,9 @@ const CartSummary = ({ totalPrice, itemCount, cartId }) => {
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-500">
-              Subtotal {safeItemCount} items
+              Subtotal {itemCount} items
             </span>
-            <span>${safePrice.toFixed(2)}</span>
+            <span>${parseFloat(totalPrice).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-500">Shipping</span>
@@ -51,7 +49,7 @@ const CartSummary = ({ totalPrice, itemCount, cartId }) => {
         </div>
         <div className="card-actions justify-end mt-4">
           <button
-            disabled={!itemCount || itemCount <= 0 || safePrice <= 0}
+            disabled={itemCount === 0}
             className="btn btn-primary w-full"
             onClick={createOrder}
           >
