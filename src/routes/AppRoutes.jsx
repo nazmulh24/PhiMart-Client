@@ -13,6 +13,7 @@ import Profile from "../pages/Profile";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import ProductDetail from "../pages/ProductDetail";
+import Cart from "../pages/Cart";
 
 const AppRoutes = () => {
   return (
@@ -46,7 +47,7 @@ const AppRoutes = () => {
       >
         <Route index element={<Dashboard />} />
         <Route path="profile" element={<Profile />} />
-        {/* Add other dashboard routes here */}
+        <Route path="cart" element={<Cart />} />
       </Route>
     </Routes>
   );
