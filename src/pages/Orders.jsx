@@ -21,7 +21,9 @@ const Orders = () => {
 
   const handleCancelOrder = async (orderId) => {
     try {
-      const response = await AuthApiClient.post(`/orders/${orderId}/cancel/`);
+      const response = await AuthApiClient.patch(`/orders/${orderId}/`, {
+        status: "Canceled",
+      });
       console.log("Cancel order response:", response);
       if (response.status === 200) {
         setOrders((prevOrder) =>
