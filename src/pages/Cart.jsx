@@ -6,6 +6,7 @@ import CartSummary from "../components/Cart/CartSummary";
 const Cart = () => {
   const {
     cart,
+    cartId,
     loading,
     createOrGetCart,
     updateCartItemQuantity,
@@ -25,8 +26,17 @@ const Cart = () => {
   useEffect(() => {
     if (cart && cart.items) {
       setLocalCart(cart);
+      console.log("Cart data updated from context:", cart);
+    } else if (cart) {
+      // Even if cart.items is empty, update localCart
+      setLocalCart(cart);
+      console.log("Empty cart data updated from context:", cart);
     }
   }, [cart]);
+
+  //--> Debug log
+  //   console.log("Cart context cart:", cart);
+  //   console.log("Local cart:", localCart);
 
   if (loading) return <p>Loading...</p>;
   if (!localCart || !Array.isArray(localCart.items))
@@ -105,8 +115,9 @@ const Cart = () => {
         </div>
         <div>
           <CartSummary
-            totalPrice={localCart?.total_price}
+            totalPrice={localCart?.Total_Price}
             itemCount={localCart?.items?.length}
+            cartId={cartId}
           />
         </div>
       </div>

@@ -109,6 +109,7 @@ const useCart = () => {
   return {
     cart,
     loading,
+    cartId,
     createOrGetCart,
     AddCartItems,
     updateCartItemQuantity,

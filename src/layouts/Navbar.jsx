@@ -113,7 +113,7 @@ const Navbar = () => {
                     {cart?.items?.length || 0} Items
                   </span>
                   <span className="text-info">
-                    Subtotal: ${(parseFloat(cart?.total_price) || 0).toFixed(2)}
+                    Subtotal: ${(parseFloat(cart?.Total_Price) || 0).toFixed(2)}
                   </span>
                   <div className="card-actions">
                     <Link to="dashboard/cart/">
