@@ -9,9 +9,12 @@ const useCart = () => {
 
   const [cart, setCart] = useState(null);
   const [cartId, setCartId] = useState(() => localStorage.getItem("cartId"));
+  const [loading, setLoading] = useState(false);
 
   //--> Create a new cart
   const createOrGetCart = useCallback(async () => {
+    setLoading(true);
+
     if (!authToken) {
       console.error("No authentication token available");
       return;
@@ -28,12 +31,16 @@ const useCart = () => {
       //   console.log(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }, [authToken, cartId]);
 
   //--> Add Item to the Cart
   const addItemToCart = useCallback(
     async (product_id, quantity) => {
+      setLoading(true);
+
       if (!cartId) await createOrGetCart();
 
       try {
@@ -43,13 +50,45 @@ const useCart = () => {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        console.log("Error adding Items", error);
+      } finally {
+        setLoading(false);
       }
     },
     [cartId, createOrGetCart]
   );
 
-  return { cart, createOrGetCart, addItemToCart };
+  //--> Update Item Quantity
+  const updateCartItemQuantity = useCallback(
+    async (itemId, newQuantity) => {
+      setLoading(true);
+
+      if (!cartId) await createOrGetCart();
+
+      try {
+        const response = await AuthApiClient.patch(
+          `/carts/${cartId}/items/${itemId}/`,
+          {
+            quantity: newQuantity,
+          }
+        );
+        return response.data;
+      } catch (error) {
+        console.log("Error updating item quantity", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [cartId, createOrGetCart]
+  );
+
+  return {
+    cart,
+    loading,
+    createOrGetCart,
+    addItemToCart,
+    updateCartItemQuantity,
+  };
 };
 
 export default useCart;
