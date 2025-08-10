@@ -1,11 +1,15 @@
 import { Suspense, useEffect, useState } from "react";
 import useCartContext from "../hooks/useCartContext";
 import CartItemList from "../components/Cart/CartItemList";
-import { set } from "react-hook-form";
 
 const Cart = () => {
-  const { cart, loading, createOrGetCart, updateCartItemQuantity } =
-    useCartContext();
+  const {
+    cart,
+    loading,
+    createOrGetCart,
+    updateCartItemQuantity,
+    deleteCartItems,
+  } = useCartContext();
 
   const [localCart, setLocalCart] = useState(cart);
 
@@ -16,6 +20,8 @@ const Cart = () => {
   }, [createOrGetCart, cart, loading]);
 
   const handleUpdateQuantity = async (itemId, newQuantity) => {
+    const prevLocalCartCopy = { ...localCart }; //--> Create a copy of the current cart state
+
     setLocalCart((prevLocalCart) => {
       const updatedItems = prevLocalCart.items.map((item) =>
         item.id === itemId ? { ...item, quantity: newQuantity } : item
@@ -27,6 +33,25 @@ const Cart = () => {
       await updateCartItemQuantity(itemId, newQuantity);
     } catch (error) {
       console.log(error);
+      setLocalCart(prevLocalCartCopy); //--> Rollback to previous cart state
+    }
+  };
+
+  const handleRemoveItem = async (itemId) => {
+    const prevLocalCartCopy = { ...localCart }; //--> Create a copy of the current cart state
+
+    setLocalCart((prevLocalCart) => {
+      const updatedItems = prevLocalCart.items.filter(
+        (item) => item.id !== itemId
+      );
+      return { ...prevLocalCart, items: updatedItems };
+    });
+
+    try {
+      await deleteCartItems(itemId);
+    } catch (error) {
+      console.log(error);
+      setLocalCart(prevLocalCartCopy); //--> Rollback to previous cart state
     }
   };
 
@@ -40,6 +65,7 @@ const Cart = () => {
           <CartItemList
             items={localCart.items}
             handleUpdateQuantity={handleUpdateQuantity}
+            handleRemoveItem={handleRemoveItem}
           />
         </Suspense>
       </div>
