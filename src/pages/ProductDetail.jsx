@@ -4,6 +4,7 @@ import ProductImageGallery from "../components/ProductDetails/ProductImageGalary
 import { FaArrowLeft } from "react-icons/fa";
 import { Suspense, useEffect, useState } from "react";
 import apiClient from "../services/api-client";
+import ReviewSection from "../components/Reviews/ReviewSection";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -113,6 +114,8 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      <ReviewSection />
     </div>
   );
 };
