@@ -10,7 +10,7 @@ const ReviewForm = ({ onSubmit }) => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const ratingValue = watch("ratings", 0);
+  const ratingValue = watch("rating", 0);
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -19,13 +19,13 @@ const ReviewForm = ({ onSubmit }) => {
           <span className="label-text">Rating</span>
         </label>
         <StarRating
-          onChange={(value) => setValue("ratings", value)}
+          onChange={(value) => setValue("rating", value)}
           rating={ratingValue}
         />
-        {errors.ratings && (
+        {errors.rating && (
           <p className="text-error text-sm mt-1">Rating is required</p>
         )}
-        <input type="hidden" {...register("ratings", { required: true })} />
+        <input type="hidden" {...register("rating", { required: true })} />
       </div>
 
       <div className="form-control">
