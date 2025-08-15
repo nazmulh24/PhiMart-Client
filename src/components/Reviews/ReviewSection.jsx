@@ -60,6 +60,15 @@ const ReviewSection = () => {
     }
   };
 
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await authApiClient.delete(`/products/${productId}/reviews/${reviewId}/`);
+      fetchReviews();
+    } catch (error) {
+      console.log("Error deleting review", error);
+    }
+  };
+
   useEffect(() => {
     checkUserPermission();
     fetchReviews();
@@ -106,6 +115,7 @@ const ReviewSection = () => {
           editingId={editingId}
           setEditingId={setEditingId}
           handleUpdateReview={handleUpdateReview}
+          handleDeleteReview={handleDeleteReview}
         />
       )}
     </div>
