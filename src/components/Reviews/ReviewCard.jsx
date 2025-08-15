@@ -9,6 +9,7 @@ const ReviewCard = ({
   onEditClick,
   isEditing,
   onCancelEdit,
+  onSaveEdit,
 }) => {
   console.log(review);
   return (
@@ -50,6 +51,7 @@ const ReviewCard = ({
             editReview={editReview}
             setEditReview={setEditReview}
             onCancelEdit={onCancelEdit}
+            onSave={onSaveEdit}
           />
         ) : (
           <div className="mt-4">
