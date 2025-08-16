@@ -17,6 +17,7 @@ import Cart from "../pages/Cart";
 import Orders from "../pages/Orders";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import AddProduct from "../pages/AddProduct";
+import Test from "../pages/Test";
 
 const AppRoutes = () => {
   return (
@@ -24,6 +25,7 @@ const AppRoutes = () => {
       {/* Public Routes */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="test/" element={<Test />} />
         <Route path="about" element={<About />} />
         <Route path="shop" element={<Shop />} />
         <Route path="login" element={<Login />} />
