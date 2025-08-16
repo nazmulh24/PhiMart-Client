@@ -19,6 +19,7 @@ import PaymentSuccess from "../pages/PaymentSuccess";
 import AddProduct from "../pages/AddProduct";
 import Test from "../pages/Test";
 import Test2 from "../pages/Test2";
+import Test3 from "../pages/Test3";
 
 const AppRoutes = () => {
   return (
@@ -26,8 +27,9 @@ const AppRoutes = () => {
       {/* Public Routes */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="test/" element={<Test />} />
+        <Route path="test1/" element={<Test />} />
         <Route path="test2/" element={<Test2 />} />
+        <Route path="test3/" element={<Test3 />} />
         <Route path="about" element={<About />} />
         <Route path="shop" element={<Shop />} />
         <Route path="login" element={<Login />} />
